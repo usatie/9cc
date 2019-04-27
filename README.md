@@ -4,11 +4,11 @@ This repo is workspace for [低レイヤを知りたい人のためのCコンパ
 ## Requirements
 - [Docker](https://www.docker.com) environment.
 
-## Build and start a container
+## Setup
 1. Run `./setup.sh`
 2. :tada:
 
-## 2. Utility aliases for development
+## Convenient Alias
 Add these alias to your `~/.bashrc` or `~/.zshrc`.
 ```
 alias dockercc="docker exec -w /home -it 9cc"
@@ -18,3 +18,18 @@ alias testcc="dockercc make test"
 alias cleancc="dockercc make clean"
 alias runcc="dockercc ./9cc"
 ```
+
+## Build
+Run `makecc`
+
+## Test
+Run `testcc`
+
+## Clean
+Run `cleancc`
+
+## Enter the container
+Run `entercc`
+
+## Run the compiler
+Run `runcc`
