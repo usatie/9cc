@@ -1,3 +1,3 @@
-docker build . -t compiler
-docker volume create compiler
-docker run -v compiler:/home -it compiler /bin/sh
+#!/bin/bash
+docker build . -t 9cc
+docker run -v $(pwd)/workspace:/home --name 9cc -w /home -d -it 9cc /bin/sh

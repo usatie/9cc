@@ -8,26 +8,13 @@ This repo is workspace for [低レイヤを知りたい人のためのCコンパ
 1. Run `./setup.sh`
 2. :tada:
 
-* Ctrl+P, Ctrl+Q to exit from the container.
-
-
-## 2. Execute on a existing container
+## 2. Utility aliases for development
+Add these alias to your `~/.bashrc` or `~/.zshrc`.
 ```
-$ docker exec -it {container-id} /bin/sh
-```
-
-* Use `docker ps` to get container's id.
-
-
-## 3. Utility command for development
-
-```~/.zshrc or ~/.bashrc
-alias compile="docker exec -it compiler gcc -o /home/9cc /home/9cc.c"
-alias run="docker exec -it compiler /home/9cc"
-```
-
-
-```
-$ compile
-$ run {args}
+alias dockercc="docker exec -w /home -it 9cc"
+alias entercc="dockercc /bin/sh"
+alias makecc="dockercc gcc make"
+alias testcc="dockercc make test"
+alias cleancc="dockercc make clean"
+alias runcc="dockercc ./9cc"
 ```
