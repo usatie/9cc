@@ -1,4 +1,5 @@
 # Let's make a C compiler!
+This repo is workspace for [低レイヤを知りたい人のためのCコンパイラ作成入門](https://www.sigbus.info/compilerbook/).
 
 ## Requirements
 - [Docker](https://www.docker.com) environment.
