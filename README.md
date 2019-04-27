@@ -17,3 +17,17 @@ $ docker exec -it {container-id} /bin/sh
 ```
 
 * Use `docker ps` to get container's id.
+
+
+## 3. Utility command for development
+
+```~/.zshrc or ~/.bashrc
+alias compile="docker exec -it compiler gcc -o /home/9cc /home/9cc.c"
+alias run="docker exec -it compiler /home/9cc"
+```
+
+
+```
+$ compile
+$ run {args}
+```
