@@ -29,6 +29,11 @@ typedef struct {
   char *input;
 } Token;
 
+Token *new_token(int ty, char *input);
+Token *new_token_num(int val, char *input);
+Token *new_token_eof(char *input);
+
+
 // Node
 enum {
   ND_NUM = 256,

@@ -1,18 +1,22 @@
 #include "cc.h"
 
-Token tokens[100];
+
+int consume(int ty);
+Node *add();
+Node *mul();
+Node *term();
+
+Vector *tokens;
 int pos = 0;
 
 /// Consume token
 int consume(int ty) {
-  if (tokens[pos].ty != ty)
+  Token *token = (Token *)tokens->data[pos];
+  if (token->ty != ty)
     return 0;
   pos++;
   return 1;
 }
-Node *add();
-Node *mul();
-Node *term();
 
 Node *add() {
   Node *node = mul();
@@ -41,17 +45,20 @@ Node *mul() {
 }
 
 Node *term() {
+  Token *token = (Token *)tokens->data[pos];
   if (consume('(')) {
     Node *node = add();
     if (!consume(')'))
-      error("There is no closing parenthesis: %s", tokens[pos].input);
+      error("There is no closing parenthesis: %s", token->input);
     return node;
   }
 
-  if (tokens[pos].ty == TK_NUM)
-    return new_node_num(tokens[pos++].val);
-  
-  error("Token which is not number nor open parenthesis: %s", tokens[pos].input);
+  if (token->ty == TK_NUM)
+    pos++;
+    return new_node_num(token->val);
+
+  error("Not number nor parenthesis: %s",
+        token->input);
 }
 
 void gen(Node *node) {
@@ -85,10 +92,6 @@ void gen(Node *node) {
   printf("  push rax\n");
 }
 
-
-
-
-
 void tokenize(char *p) {
 	int i = 0;
 	while (*p) {
@@ -97,18 +100,18 @@ void tokenize(char *p) {
 			continue;
 		}
 
+
 		if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
-			tokens[i].ty = *p;
-			tokens[i].input = p;
+      Token *token = new_token(*p, p);
+      vec_push(tokens, token);
 			i++;
 			p++;
 			continue;
 		}
 
 		if (isdigit(*p)) {
-			tokens[i].ty = TK_NUM;
-			tokens[i].input = p;
-			tokens[i].val = strtol(p, &p, 10);
+      Token *token = new_token_num(strtol(p, &p, 10), p);
+      vec_push(tokens, token);
 			i++;
 			continue;
 		}
@@ -117,9 +120,10 @@ void tokenize(char *p) {
 		exit(1);
 	}
 
-	tokens[i].ty = TK_EOF;
-	tokens[i].input = p;
+  Token *token = new_token_eof(p);
+  vec_push(tokens, token);
 }
+
 
 // Main
 int main(int argc, char **argv) {
@@ -132,6 +136,8 @@ int main(int argc, char **argv) {
 		runtest();
 		return 0;
 	}
+
+  tokens = new_vector();
 
 	// Tokenize and parse
 	tokenize(argv[1]);
