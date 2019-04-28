@@ -13,7 +13,7 @@ Add these alias to your `~/.bashrc` or `~/.zshrc`.
 ```
 alias dockercc="docker exec -w /home -it 9cc"
 alias entercc="dockercc /bin/sh"
-alias makecc="dockercc gcc make"
+alias makecc="dockercc make"
 alias testcc="dockercc make test"
 alias cleancc="dockercc make clean"
 alias runcc="dockercc ./9cc"
