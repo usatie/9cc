@@ -15,6 +15,13 @@ Token *new_token_num(int val, char *input) {
   return token;
 }
 
+Token *new_token_id(char *input) {
+  Token *token = malloc(sizeof(Token));
+  token->ty = TK_IDENT;
+  token->input = input;
+  return token;
+}
+
 Token *new_token_eof(char *input) {
   Token *token = malloc(sizeof(Token));
   token->ty = TK_EOF;

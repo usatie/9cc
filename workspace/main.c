@@ -93,7 +93,6 @@ void gen(Node *node) {
 }
 
 void tokenize(char *p) {
-	int i = 0;
 	while (*p) {
 		if (isspace(*p)) {
 			p++;
@@ -104,15 +103,19 @@ void tokenize(char *p) {
 		if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
       Token *token = new_token(*p, p);
       vec_push(tokens, token);
-			i++;
 			p++;
 			continue;
 		}
 
+    if ('a' <= *p && *p <= 'z') {
+      Token *token = new_token_id(p);
+      p++;
+      continue;
+    }
+
 		if (isdigit(*p)) {
       Token *token = new_token_num(strtol(p, &p, 10), p);
       vec_push(tokens, token);
-			i++;
 			continue;
 		}
 
