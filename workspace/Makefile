@@ -1,8 +1,8 @@
-9cc: 9cc.c
+main: main.c vector.c cc.h
 
-test: 9cc
-	./9cc -test
+test: main
+	./main -test
 	./test.sh
 
 clean:
-	rm -f 9cc *.o *~ tmp*
+	rm -f main *.o *~ tmp*
