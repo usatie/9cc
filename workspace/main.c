@@ -3,14 +3,6 @@
 Token tokens[100];
 int pos = 0;
 
-void error(char *fmt, ...) {
-	va_list ap;
-	va_start(ap, fmt);
-	vfprintf(stderr, fmt, ap);
-	fprintf(stderr, "\n");
-	exit(1);
-}
-
 /// Consume token
 int consume(int ty) {
   if (tokens[pos].ty != ty)

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// vector.c
+// Vector
 typedef struct {
 	void **data;
 	int capacity;
@@ -17,7 +17,7 @@ typedef struct {
 Vector *new_vector();
 void vec_push(Vector *vec, void *elem);
 
-// token.c
+// Token
 enum {
 	TK_NUM = 256, // integer
   TK_EOF,
@@ -29,7 +29,7 @@ typedef struct {
   char *input;
 } Token;
 
-// node.c
+// Node
 enum {
   ND_NUM = 256,
 };
@@ -41,12 +41,13 @@ typedef struct Node {
   int val;
 } Node;
 
-/// Create new Node (Node)
 Node *new_node(int ty, Node *lhs, Node *rhs);
-/// Create new Node (Num)
 Node *new_node_num(int val);
 
-// test.c
+// Utility
+void error(char *fmt, ...);
+
+// Test
 int expect(int line, int expected, int actual);
 void runtest();
 
