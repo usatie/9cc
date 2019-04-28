@@ -18,3 +18,7 @@ Vector *new_vector();
 void vec_push(Vector *vec, void *elem);
 
 #endif
+
+// test.c
+int expect(int line, int expected, int actual);
+void runtest();

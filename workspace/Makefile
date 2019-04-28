@@ -1,4 +1,4 @@
-main: main.c vector.c cc.h
+main: main.c vector.c vector_test.c cc.h
 
 test: main
 	./main -test
