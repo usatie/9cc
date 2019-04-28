@@ -51,6 +51,9 @@ typedef struct Node {
 Node *new_node(int ty, Node *lhs, Node *rhs);
 Node *new_node_num(int val);
 
+// Parser
+Node *parse(char *p);
+
 // Utility
 void error(char *fmt, ...);
 
