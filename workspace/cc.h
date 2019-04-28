@@ -29,6 +29,23 @@ typedef struct {
   char *input;
 } Token;
 
+// node.c
+enum {
+  ND_NUM = 256,
+};
+
+typedef struct Node {
+  int ty;
+  struct Node *lhs;
+  struct Node *rhs;
+  int val;
+} Node;
+
+/// Create new Node (Node)
+Node *new_node(int ty, Node *lhs, Node *rhs);
+/// Create new Node (Num)
+Node *new_node_num(int val);
+
 // test.c
 int expect(int line, int expected, int actual);
 void runtest();
