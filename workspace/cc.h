@@ -17,8 +17,21 @@ typedef struct {
 Vector *new_vector();
 void vec_push(Vector *vec, void *elem);
 
-#endif
+// token.c
+enum {
+	TK_NUM = 256, // integer
+  TK_EOF,
+};
+
+typedef struct {
+	int ty;				// Token type
+	int val;			// The value if ty is TK_NUM
+  char *input;
+} Token;
 
 // test.c
 int expect(int line, int expected, int actual);
 void runtest();
+
+#endif
+

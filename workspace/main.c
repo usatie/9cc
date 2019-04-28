@@ -1,19 +1,5 @@
 #include "cc.h"
 
-// Token
-/// Token type
-enum {
-	TK_NUM = 256, // integer
-  TK_EOF,
-};
-
-/// Token
-typedef struct {
-	int ty;				// Token type
-	int val;			// The value if ty is TK_NUM
-  char *input;
-} Token;
-
 Token tokens[100];
 int pos = 0;
 
