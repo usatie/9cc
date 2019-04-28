@@ -4,19 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Enum represents token type
+// Token
+/// Token type
 enum {
 	TK_NUM = 256, // integer
-	TK_EOF,				// End of input
+  TK_EOF,
 };
 
+/// Token
 typedef struct {
 	int ty;				// Token type
 	int val;			// The value if ty is TK_NUM
-	char *input;	// Token character (for error message)
+  char *input;
 } Token;
 
 Token tokens[100];
+int pos = 0;
 
 void error(char *fmt, ...) {
 	va_list ap;
@@ -25,6 +28,120 @@ void error(char *fmt, ...) {
 	fprintf(stderr, "\n");
 	exit(1);
 }
+// Node
+/// Node type
+enum {
+  ND_NUM = 256,
+};
+
+/// Node
+typedef struct Node {
+  int ty;
+  struct Node *lhs;
+  struct Node *rhs;
+  int val;
+} Node;
+
+/// Create new Node (Node)
+Node *new_node(int ty, Node *lhs, Node *rhs) {
+  Node *node = malloc(sizeof(Node));
+  node->ty = ty;
+  node->lhs = lhs;
+  node->rhs = rhs;
+  return node;
+}
+
+/// Create new Node (Num)
+Node *new_node_num(int val) {
+  Node *node = malloc(sizeof(Node));
+  node->ty = ND_NUM;
+  node->val = val;
+  return node;
+}
+
+/// Consume token
+int consume(int ty) {
+  if (tokens[pos].ty != ty)
+    return 0;
+  pos++;
+  return 1;
+}
+Node *add();
+Node *mul();
+Node *term();
+
+Node *add() {
+  Node *node = mul();
+
+  for (;;) {
+    if (consume('+'))
+      node = new_node('+', node, mul());
+    else if (consume('-'))
+      node = new_node('-', node, mul());
+    else
+      return node;
+  }
+}
+
+Node *mul() {
+  Node *node = term();
+
+  for (;;) {
+    if (consume('*'))
+      node = new_node('*', node, term());
+    else if (consume('/'))
+      node = new_node('/', node, term());
+    else
+      return node;
+  }
+}
+
+Node *term() {
+  if (consume('(')) {
+    Node *node = add();
+    if (!consume(')'))
+      error("There is no closing parenthesis: %s", tokens[pos].input);
+    return node;
+  }
+
+  if (tokens[pos].ty == TK_NUM)
+    return new_node_num(tokens[pos++].val);
+  
+  error("Token which is not number nor open parenthesis: %s", tokens[pos].input);
+}
+
+void gen(Node *node) {
+  if (node->ty == ND_NUM) {
+    printf("  push %d\n", node->val);
+    return;
+  }
+
+  gen(node->lhs);
+  gen(node->rhs);
+
+  printf("  pop rdi\n");
+  printf("  pop rax\n");
+
+  switch (node->ty) {
+    case '+':
+      printf("  add rax, rdi\n");
+      break;
+    case '-':
+      printf("  sub rax, rdi\n");
+      break;
+    case '*':
+      printf("  mul rdi\n");
+      break;
+    case '/':
+      printf("  mov rdx, 0\n");
+      printf("  div rdi\n");
+      break;
+  }
+}
+
+
+
+
 
 void tokenize(char *p) {
 	int i = 0;
