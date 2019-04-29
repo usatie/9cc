@@ -97,15 +97,13 @@ Node *term() {
 
   if (token->ty == TK_NUM)
     pos++;
-    return new_node_num(token->val);
+  return new_node_num(token->val);
 
-  error("Not number nor parenthesis: %s",
-        token->input);
+  error("Not number nor parenthesis: %s", token->input);
 }
 
-
 Node *parse(char *p) {
-	pos = 0;
-	tokens = tokenize(p);
+  pos = 0;
+  tokens = tokenize(p);
   return equality();
 }

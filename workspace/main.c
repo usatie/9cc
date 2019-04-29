@@ -6,15 +6,15 @@ int main(int argc, char **argv) {
     return 1;
   }
 
-	if (!strcmp(argv[1], "-test")) {
-		runtest();
-		return 0;
-	}
+  if (!strcmp(argv[1], "-test")) {
+    runtest();
+    return 0;
+  }
 
-	// Tokenize and parse
+  // Tokenize and parse
   Node *node = parse(argv[1]);
 
-	// Print assembly's first half
+  // Print assembly's first half
   printf(".intel_syntax noprefix\n");
   printf(".global main\n");
   printf("main:\n");
