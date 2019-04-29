@@ -8,6 +8,11 @@ This repo is workspace for [低レイヤを知りたい人のためのCコンパ
 1. Run `./setup.sh`
 2. :tada:
 
+## Format
+1. Install [clang-format](http://clang.llvm.org/docs/ClangFormat.html) `brew install clang-format`
+2. Run `clang-format *.c *.h -i -style=llvm`
+3. :tada:
+
 ## Convenient Alias
 Add these alias to your `~/.bashrc` or `~/.zshrc`.
 ```
