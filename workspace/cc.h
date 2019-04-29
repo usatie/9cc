@@ -38,7 +38,7 @@ Token *new_token(int ty, char *input);
 Token *new_token_num(int val, char *input);
 Token *new_token_id(char *input);
 Token *new_token_eof(char *input);
-
+Vector *tokenize(char *p);
 
 // Node
 enum {
