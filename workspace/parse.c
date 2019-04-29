@@ -9,7 +9,7 @@ int pos = 0;
 int consume(int ty);
 Node *assign();
 Node *stmt();
-Node *program();
+void program();
 Node *equality();
 Node *relational();
 Node *add();
@@ -43,7 +43,7 @@ Node *stmt() {
   return node;
 }
 
-Node *program() {
+void program() {
   int i = 0;
   while (((Token *)tokens->data[pos])->ty != TK_EOF)
     code[i++] = stmt();
