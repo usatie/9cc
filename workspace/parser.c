@@ -1,11 +1,15 @@
 #include "cc.h"
 
 /// Variables
+Node *code[100];
 Vector *tokens;
 int pos = 0;
 
 /// Header
 int consume(int ty);
+Node *assign();
+Node *stmt();
+Node *program();
 Node *equality();
 Node *relational();
 Node *add();
@@ -23,6 +27,29 @@ int consume(int ty) {
 }
 
 /// Syntax Rules
+Node *assign() {
+  Node *node = equality();
+  while (consume('='))
+    node = new_node('=', node, assign());
+  return node;
+}
+
+Node *stmt() {
+  Node *node = assign();
+  if (!consume(';')) {
+    Token *token = (Token *)tokens->data[pos];
+    error("';' is expected but got: %s", token->input);
+  }
+  return node;
+}
+
+Node *program() {
+  int i = 0;
+  while (((Token *)tokens->data[pos])->ty != TK_EOF)
+    code[i++] = stmt();
+  code[i] = NULL;
+}
+
 Node *equality() {
   Node *node = relational();
   for (;;) {
