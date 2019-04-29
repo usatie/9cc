@@ -1,5 +1,10 @@
 #include "cc.h"
 
+/// Variables
+Vector *tokens;
+int pos = 0;
+
+/// Header
 int consume(int ty);
 Node *equality();
 Node *relational();
@@ -7,8 +12,6 @@ Node *add();
 Node *mul();
 Node *unary();
 Node *term();
-Vector *tokens;
-int pos = 0;
 
 /// Consume token
 int consume(int ty) {
@@ -101,10 +104,8 @@ Node *term() {
 }
 
 
-
-
 Node *parse(char *p) {
-  //tokens = new_vector();
+	pos = 0;
 	tokens = tokenize(p);
   return equality();
 }
