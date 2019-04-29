@@ -126,13 +126,23 @@ void gen(Node *node) {
       printf("	div rdi\n");
       break;
 		case TK_EQ:
-			printf("	cmp rdi, rax\n");
+			printf("	cmp rax, rdi\n");
 			printf("	sete al\n");
 			printf("	movzb rax, al\n");
 			break;
 		case TK_NE:
-			printf("	cmp rdi, rax\n");
+			printf("	cmp rax, rdi\n");
 			printf("	setne al\n");
+			printf("	movzb rax, al\n");
+			break;
+		case '<':
+			printf("	cmp rax, rdi\n");
+			printf("	setl al\n");
+			printf("	movzb rax, al\n");
+			break;
+		case TK_LE:
+			printf("	cmp rax, rdi\n");
+			printf("	setle al\n");
 			printf("	movzb rax, al\n");
 			break;
   }
@@ -155,8 +165,6 @@ void tokenize(char *p) {
 			p++;
 			continue;
     }
-
-		// < <= > >=
     if (!strncmp(p, "!=", 2)) {
       Token *token = new_token(TK_NE, p);
       vec_push(tokens, token);
@@ -164,13 +172,6 @@ void tokenize(char *p) {
 			p++;
 			continue;
     }
-    if (*p == '<' || *p == '>') {
-      Token *token = new_token(*p, p);
-      vec_push(tokens, token);
-			p++;
-			continue;
-    }
-
     if (!strncmp(p, "<=", 2)) {
       Token *token = new_token(TK_LE, p);
       vec_push(tokens, token);
@@ -186,8 +187,7 @@ void tokenize(char *p) {
 			continue;
     }
 
-
-		if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
+		if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')' || *p == '<' || *p == '>') {
       Token *token = new_token(*p, p);
       vec_push(tokens, token);
 			p++;
