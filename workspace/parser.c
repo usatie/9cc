@@ -1,6 +1,8 @@
 #include "cc.h"
 
 int consume(int ty);
+Node *equality();
+Node *relational();
 Node *add();
 Node *mul();
 Node *unary();
@@ -15,6 +17,34 @@ int consume(int ty) {
     return 0;
   pos++;
   return 1;
+}
+
+Node *equality() {
+  Node *node = relational();
+  for (;;) {
+    if (consume(TK_EQ))
+      node = new_node(TK_EQ, node, relational());
+    else if (consume(TK_NE))
+      node = new_node(TK_NE, node, relational());
+    else
+      return node;
+  }
+}
+
+Node *relational() {
+  Node *node = add();
+  for (;;) {
+    if (consume('<'))
+      node = new_node('<', node, add());
+    else if (consume(TK_LE))
+      node = new_node(TK_LE, node, add());
+    else if (consume('>'))
+      node = new_node('>', node, add());
+    else if (consume(TK_GE))
+      node = new_node(TK_GE, node, add());
+    else
+      return node;
+  }
 }
 
 Node *add() {
@@ -55,7 +85,7 @@ Node *unary() {
 Node *term() {
   Token *token = (Token *)tokens->data[pos];
   if (consume('(')) {
-    Node *node = add();
+    Node *node = equality();
     if (!consume(')'))
       error("There is no closing parenthesis: %s", token->input);
     return node;
@@ -71,33 +101,37 @@ Node *term() {
 
 void gen(Node *node) {
   if (node->ty == ND_NUM) {
-    printf("  push %d\n", node->val);
+    printf("	push %d\n", node->val);
     return;
   }
 
   gen(node->lhs);
   gen(node->rhs);
 
-  printf("  pop rdi\n");
-  printf("  pop rax\n");
+  printf("	pop rdi\n");
+  printf("	pop rax\n");
 
   switch (node->ty) {
     case '+':
-      printf("  add rax, rdi\n");
+      printf("	add rax, rdi\n");
       break;
     case '-':
-      printf("  sub rax, rdi\n");
+      printf("	sub rax, rdi\n");
       break;
     case '*':
-      printf("  mul rdi\n");
+      printf("	mul rdi\n");
       break;
     case '/':
-      printf("  mov rdx, 0\n");
-      printf("  div rdi\n");
+      printf("	mov rdx, 0\n");
+      printf("	div rdi\n");
       break;
+		case TK_EQ:
+			printf("	cmp rdi, rax\n");
+			printf("	sete al\n");
+			printf("	movzb rax, al\n");
   }
 
-  printf("  push rax\n");
+  printf("	push rax\n");
 }
 
 void tokenize(char *p) {
@@ -106,6 +140,45 @@ void tokenize(char *p) {
 			p++;
 			continue;
 		}
+
+		// == or !=
+    if (!strncmp(p, "==", 2)) {
+      Token *token = new_token(TK_EQ, p);
+      vec_push(tokens, token);
+			p++;
+			p++;
+			continue;
+    }
+
+		// < <= > >=
+    if (!strncmp(p, "!=", 2)) {
+      Token *token = new_token(TK_NE, p);
+      vec_push(tokens, token);
+			p++;
+			p++;
+			continue;
+    }
+    if (*p == '<' || *p == '>') {
+      Token *token = new_token(*p, p);
+      vec_push(tokens, token);
+			p++;
+			continue;
+    }
+
+    if (!strncmp(p, "<=", 2)) {
+      Token *token = new_token(TK_LE, p);
+      vec_push(tokens, token);
+			p++;
+			p++;
+			continue;
+    }
+    if (!strncmp(p, ">=", 2)) {
+      Token *token = new_token(TK_GE, p);
+      vec_push(tokens, token);
+			p++;
+			p++;
+			continue;
+    }
 
 
 		if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' || *p == ')') {
@@ -117,6 +190,7 @@ void tokenize(char *p) {
 
     if ('a' <= *p && *p <= 'z') {
       Token *token = new_token_id(p);
+			vec_push(tokens, token);
       p++;
       continue;
     }
@@ -139,5 +213,5 @@ void tokenize(char *p) {
 Node *parse(char *p) {
   tokens = new_vector();
 	tokenize(p);
-  return add();
+  return equality();
 }

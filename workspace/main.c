@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
 
   // The result should be at the top of stack
   // Load it to RAX as a return value.
-  printf("  pop rax\n");
+  printf("	pop rax\n");
   printf("	ret\n");
   return 0;
 }

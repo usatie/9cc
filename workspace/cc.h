@@ -19,9 +19,13 @@ void vec_push(Vector *vec, void *elem);
 
 // Token
 enum {
-	TK_NUM = 256, // Integer token
-  TK_IDENT,     // ID
-  TK_EOF,       // End of file token
+	TK_NUM = 256, // Integer
+	TK_IDENT,     // ID
+	TK_EQ,        // ==
+	TK_NE,        // !=
+	TK_LE,        // <=
+	TK_GE,        // >=
+	TK_EOF,       // End of file token
 };
 
 typedef struct {
