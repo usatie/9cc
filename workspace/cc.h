@@ -42,14 +42,16 @@ Vector *tokenize(char *p);
 
 // Node
 enum {
-  ND_NUM = 256,
+  ND_NUM = 256, // Integer
+  ND_IDENT,     // ID
 };
 
 typedef struct Node {
-  int ty;
-  struct Node *lhs;
-  struct Node *rhs;
-  int val;
+  int ty;           // Operator or ND_NUM
+  struct Node *lhs; // Left hand
+  struct Node *rhs; // Right hand
+  int val;          // Use if ND_NUM
+  char name;        // Use if ND_IDENT
 } Node;
 
 Node *new_node(int ty, Node *lhs, Node *rhs);

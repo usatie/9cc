@@ -48,7 +48,7 @@ Vector *tokenize(char *p) {
     if (!strncmp(p, "!=", 2)) {
       Token *token = new_token(TK_NE, p);
       vec_push(tokens, token);
-      p +=2;
+      p += 2;
       continue;
     }
     if (!strncmp(p, "<=", 2)) {
