@@ -1,4 +1,4 @@
-#include "cc.h"
+#include "9cc.h"
 
 Token *new_token(int ty, char *input) {
   Token *token = malloc(sizeof(Token));

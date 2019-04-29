@@ -1,4 +1,4 @@
-#include "cc.h"
+#include "9cc.h"
 
 /// Create new Node (Node)
 Node *new_node(int ty, Node *lhs, Node *rhs) {

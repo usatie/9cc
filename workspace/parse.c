@@ -1,4 +1,4 @@
-#include "cc.h"
+#include "9cc.h"
 
 /// Variables
 Node *code[100];

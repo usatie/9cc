@@ -1,4 +1,4 @@
-#include "cc.h"
+#include "9cc.h"
 
 int main(int argc, char **argv) {
   if (argc != 2) {

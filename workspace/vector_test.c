@@ -1,4 +1,4 @@
-#include "cc.h"
+#include "9cc.h"
 
 // Unit tests
 int expect(int line, int expected, int actual) {

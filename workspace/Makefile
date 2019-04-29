@@ -1,8 +1,15 @@
-main: main.c vector.c node.c token.c parse.c codegen.c vector_test.c cc.h
+CFLAGS=-Wall -std=c11
+SRCS=$(wildcard *.c)
+OBJS=$(SRCS:.c=.o)
 
-test: main
-	./main -test
+9cc: $(OBJS)
+	$(CC) -o 9cc $(OBJS) $(LDFLAGS)
+
+$(OBJS): 9cc.h
+
+test: 9cc
+	./9cc -test
 	./test.sh
 
 clean:
-	rm -f main *.o *~ tmp*
+	rm -f 9cc *.o *~ tmp*
