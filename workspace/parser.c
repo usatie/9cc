@@ -129,6 +129,12 @@ void gen(Node *node) {
 			printf("	cmp rdi, rax\n");
 			printf("	sete al\n");
 			printf("	movzb rax, al\n");
+			break;
+		case TK_NE:
+			printf("	cmp rdi, rax\n");
+			printf("	setne al\n");
+			printf("	movzb rax, al\n");
+			break;
   }
 
   printf("	push rax\n");
