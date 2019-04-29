@@ -65,7 +65,7 @@ Vector *tokenize(char *p) {
     }
 
     if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' ||
-        *p == ')' || *p == '<' || *p == '>') {
+        *p == ')' || *p == '<' || *p == '>' || *p == ';') {
       Token *token = new_token(*p, p);
       vec_push(tokens, token);
       p++;

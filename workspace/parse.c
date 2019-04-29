@@ -1,7 +1,7 @@
 #include "9cc.h"
 
 /// Variables
-Node *code[100];
+Node *code[5];
 Vector *tokens;
 int pos = 0;
 
@@ -45,8 +45,12 @@ Node *stmt() {
 
 void program() {
   int i = 0;
-  while (((Token *)tokens->data[pos])->ty != TK_EOF)
-    code[i++] = stmt();
+  Token *token = (Token *)tokens->data[pos];
+  while (token->ty != TK_EOF) {
+    code[i] = stmt();
+    i++;
+    token = (Token *)tokens->data[pos];
+  }
   code[i] = NULL;
 }
 
@@ -132,5 +136,6 @@ Node *term() {
 Node *parse(char *p) {
   pos = 0;
   tokens = tokenize(p);
-  return equality();
+  program();
+  return code;
 }
