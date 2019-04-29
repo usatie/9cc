@@ -16,6 +16,7 @@ Node *add();
 Node *mul();
 Node *unary();
 Node *term();
+Node *ident();
 
 /// Consume token
 int consume(int ty) {
@@ -38,7 +39,7 @@ Node *stmt() {
   Node *node = assign();
   if (!consume(';')) {
     Token *token = (Token *)tokens->data[pos];
-    error("';' is expected but got: %s", token->input);
+    error("';' is expected but got: [%d] %s", token->ty, token->input);
   }
   return node;
 }
@@ -126,11 +127,15 @@ Node *term() {
     return node;
   }
 
-  if (token->ty == TK_NUM)
+  if (token->ty == TK_NUM) {
     pos++;
-  return new_node_num(token->val);
+    return new_node_num(token->val);
+  } else if (token->ty == TK_IDENT) {
+    pos++;
+    return new_node_ident(*token->input);
+  }
 
-  error("Not number nor parenthesis: %s", token->input);
+  error("Not number, identifier nor parenthesis: %s", token->input);
 }
 
 Node *parse(char *p) {

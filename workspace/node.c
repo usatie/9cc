@@ -16,3 +16,11 @@ Node *new_node_num(int val) {
   node->val = val;
   return node;
 }
+
+/// Create new Node (ID)
+Node *new_node_ident(char name) {
+  Node *node = malloc(sizeof(Node));
+  node->ty = ND_IDENT;
+  node->name = name;
+  return node;
+}
