@@ -1,4 +1,4 @@
-main: main.c vector.c node.c token.c parser.c codegen.c vector_test.c cc.h
+main: main.c vector.c node.c token.c parse.c codegen.c vector_test.c cc.h
 
 test: main
 	./main -test
