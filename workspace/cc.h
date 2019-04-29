@@ -9,9 +9,9 @@
 
 // Vector
 typedef struct {
-	void **data;
-	int capacity;
-	int len;
+  void **data;
+  int capacity;
+  int len;
 } Vector;
 
 Vector *new_vector();
@@ -19,18 +19,18 @@ void vec_push(Vector *vec, void *elem);
 
 // Token
 enum {
-	TK_NUM = 256, // Integer
-	TK_IDENT,     // ID
-	TK_EQ,        // ==
-	TK_NE,        // !=
-	TK_LE,        // <=
-	TK_GE,        // >=
-	TK_EOF,       // End of file token
+  TK_NUM = 256, // Integer
+  TK_IDENT,     // ID
+  TK_EQ,        // ==
+  TK_NE,        // !=
+  TK_LE,        // <=
+  TK_GE,        // >=
+  TK_EOF,       // End of file token
 };
 
 typedef struct {
-	int ty;				// Token type
-	int val;			// The value if ty is TK_NUM
+  int ty;  // Token type
+  int val; // The value if ty is TK_NUM
   char *input;
 } Token;
 
@@ -67,4 +67,3 @@ int expect(int line, int expected, int actual);
 void runtest();
 
 #endif
-
