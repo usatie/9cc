@@ -36,8 +36,16 @@ Node *assign() {
 }
 
 Node *stmt() {
-  Node *node = assign();
-  if (!consume(';')) {
+  Node *node;
+	if (consume(TK_RETURN)) {
+		node = malloc(sizeof(Node));
+		node->ty = ND_RETURN;
+		node->lhs = assign();
+	} else {
+		node = assign();
+	}
+	
+	if (!consume(';')) {
     Token *token = (Token *)tokens->data[pos];
     error("';' is expected but got: [%d] %s", token->ty, token->input);
   }
@@ -59,9 +67,9 @@ Node *equality() {
   Node *node = relational();
   for (;;) {
     if (consume(TK_EQ))
-      node = new_node(TK_EQ, node, relational());
+      node = new_node(ND_EQ, node, relational());
     else if (consume(TK_NE))
-      node = new_node(TK_NE, node, relational());
+      node = new_node(ND_NE, node, relational());
     else
       return node;
   }
@@ -75,9 +83,9 @@ Node *relational() {
     else if (consume('>'))
       node = new_node('<', add(), node);
     else if (consume(TK_LE))
-      node = new_node(TK_LE, node, add());
+      node = new_node(ND_LE, node, add());
     else if (consume(TK_GE))
-      node = new_node(TK_LE, add(), node);
+      node = new_node(ND_LE, add(), node);
     else
       return node;
   }

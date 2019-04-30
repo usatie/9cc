@@ -25,6 +25,7 @@ enum {
   TK_NE,        // !=
   TK_LE,        // <=
   TK_GE,        // >=
+  TK_RETURN,        // return
   TK_EOF,       // End of file token
 };
 
@@ -44,6 +45,10 @@ Vector *tokenize(char *p);
 enum {
   ND_NUM = 256, // Integer
   ND_IDENT,     // ID
+  ND_EQ,        // ==
+  ND_NE,        // !=
+  ND_LE,        // <=
+  ND_RETURN,     // return
 };
 
 typedef struct Node {
