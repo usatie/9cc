@@ -88,9 +88,16 @@ Vector *tokenize(char *p) {
     }
 
     if ('a' <= *p && *p <= 'z') {
+			int i = 1;
+			while(is_alnum(*(p+i))) {
+				i++;
+			}
+			char* name = malloc(i);
+			strncpy(name, p, i);
       Token *token = new_token_id(p);
+			token->name = name;
       vec_push(tokens, token);
-      p++;
+      p += i;
       continue;
     }
 
