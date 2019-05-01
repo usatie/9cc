@@ -30,16 +30,35 @@ int consume(int ty) {
 }
 
 /// Syntax Rules
-Node *assign() {
-  Node *node = equality();
-  while (consume('='))
-    node = new_node('=', node, assign());
-  return node;
+void program() {
+  int i = 0;
+  Token *token = (Token *)tokens->data[pos];
+  while (token->ty != TK_EOF) {
+    code[i] = stmt();
+    i++;
+    token = (Token *)tokens->data[pos];
+  }
+  code[i] = NULL;
 }
 
 Node *stmt() {
   Node *node;
-	if (consume(TK_RETURN)) {
+	if (consume(TK_IF)) {
+		node = malloc(sizeof(Node));
+		node->ty = ND_IF;
+		Token *token = (Token *)tokens->data[pos];
+		if (consume('(')) {
+			node->lhs = equality();
+			if (!consume(')'))
+				error("There is no closing parenthesis for if statement: %s", token->input);
+			node->rhs = stmt();
+			return node;
+		} else {
+			error("There is no opening parenthesis for if statement: %s", token->input);
+		}
+	}
+
+  if (consume(TK_RETURN)) {
 		node = malloc(sizeof(Node));
 		node->ty = ND_RETURN;
 		node->lhs = assign();
@@ -54,15 +73,11 @@ Node *stmt() {
   return node;
 }
 
-void program() {
-  int i = 0;
-  Token *token = (Token *)tokens->data[pos];
-  while (token->ty != TK_EOF) {
-    code[i] = stmt();
-    i++;
-    token = (Token *)tokens->data[pos];
-  }
-  code[i] = NULL;
+Node *assign() {
+  Node *node = equality();
+  while (consume('='))
+    node = new_node('=', node, assign());
+  return node;
 }
 
 Node *equality() {

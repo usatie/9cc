@@ -37,6 +37,8 @@ enum {
   TK_LE,        // <=
   TK_GE,        // >=
   TK_RETURN,        // return
+  TK_IF,        // if
+  TK_ELSE,        // else
   TK_EOF,       // End of file token
 };
 
@@ -61,6 +63,8 @@ enum {
   ND_NE,        // !=
   ND_LE,        // <=
   ND_RETURN,     // return
+  ND_IF,     // if
+  ND_ELSE,     // else
 };
 
 typedef struct Node {

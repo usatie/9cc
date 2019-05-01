@@ -52,5 +52,7 @@ try 4 "return 4;"
 try 5 "a=3;return 5;a+10;"
 try 10 "foo=3;bar=7;return foo + bar;"
 try 100 "foo=1;bar=9;hoge=3;return (foo + bar) * (hoge + 7);"
+try 21 "if (1 == 1) return 21;return 64;"
+try 64 "if (1 == 2) return 21;return 64;"
 
 echo OK

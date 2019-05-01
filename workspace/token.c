@@ -53,6 +53,22 @@ Vector *tokenize(char *p) {
 			continue;
 		}
 
+		// if
+		if (strncmp(p, "if", 2) == 0 && !is_alnum(p[2])) {
+			Token *token = new_token(TK_IF, p);
+			vec_push(tokens, token);
+			p += 2;
+			continue;
+		}
+
+		// else
+		if (strncmp(p, "else", 4) == 0 && !is_alnum(p[4])) {
+			Token *token = new_token(TK_ELSE, p);
+			vec_push(tokens, token);
+			p += 4;
+			continue;
+		}
+
     // == or !=
     if (!strncmp(p, "==", 2)) {
       Token *token = new_token(TK_EQ, p);
@@ -80,7 +96,7 @@ Vector *tokenize(char *p) {
     }
 
     if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' ||
-        *p == ')' || *p == '<' || *p == '>' || *p == ';' || *p == '=') {
+        *p == ')' || *p == '<' || *p == '>' || *p == ';' || *p == '=' || *p == '{' || *p == '}') {
       Token *token = new_token(*p, p);
       vec_push(tokens, token);
       p++;
