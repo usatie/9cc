@@ -3,10 +3,9 @@
 void gen_lval(Node *node) {
   if (node->ty != ND_IDENT)
     error("The left hand of assignment is not an identifier.");
-
-  int offset = ('z' - node->name + 1) * 8;
+	
   printf("	mov rax, rbp\n");
-  printf("	sub rax, %d\n", offset);
+  printf("	sub rax, %d\n", node->offset);
   printf("	push rax\n");
 }
 

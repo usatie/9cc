@@ -68,12 +68,11 @@ typedef struct Node {
   struct Node *lhs; // Left hand
   struct Node *rhs; // Right hand
   int val;          // Use if ND_NUM
-  char name;        // Use if ND_IDENT
+  int offset;        // Use if ND_IDENT
 } Node;
 
 Node *new_node(int ty, Node *lhs, Node *rhs);
 Node *new_node_num(int val);
-Node *new_node_ident(char name);
 void gen(Node *node);
 
 // Parser

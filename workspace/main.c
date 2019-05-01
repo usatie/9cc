@@ -22,10 +22,10 @@ int main(int argc, char **argv) {
   printf("main:\n");
 
   // Prologue
-  // Layout memory for 26 variables
+  // Layout memory for 10 variables
   printf("	push rbp\n");
   printf("	mov rbp, rsp\n");
-  printf("	sub rsp, 208\n");
+  printf("	sub rsp, 80\n");
 
   // Generate code with going down abstract tree
   while (*node) {
