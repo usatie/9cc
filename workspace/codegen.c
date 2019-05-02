@@ -83,7 +83,9 @@ void gen(Node *node) {
   case ND_COMP_STMT:
     for (int i = 0; i < node->stmts->len; i++) {
       gen(node->stmts->data[i]);
+      emit("pop rax");
     }
+    return;
   case ND_NUM:
     emit("push %d", node->val);
     return;
