@@ -88,6 +88,9 @@ void gen(Node *node) {
     return;
   case ND_CALL:
     emit("call %s", node->name);
+    // Returned value is expected by main()
+    // If called function is void, it can cause a problem.
+    return;
   case ND_NUM:
     emit("push %d", node->val);
     return;

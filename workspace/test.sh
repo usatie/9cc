@@ -1,4 +1,8 @@
 #!/bin/bash
+gcc -c foo.c
+./9cc "foo();" > tmp.s
+gcc -o tmp tmp.s foo.o
+./tmp
 try() {
   expected="$1"
   input="$2"
