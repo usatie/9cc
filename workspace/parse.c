@@ -1,27 +1,27 @@
 #include "9cc.h"
 
 /// Variables
-Node *code[5];
-Vector *tokens;
-int pos = 0;
-int num_ids = 0;
-Map *offset_map;
+static Node *code[5];
+static Vector *tokens;
+static int pos = 0;
+static int num_ids = 0;
+static Map *offset_map;
 
 /// Header
-int consume(int ty);
-Node *assign();
-Node *stmt();
-void program();
-Node *equality();
-Node *relational();
-Node *add();
-Node *mul();
-Node *unary();
-Node *term();
-Node *ident();
+static bool consume(int ty);
+static Node *assign();
+static Node *stmt();
+static void program();
+static Node *equality();
+static Node *relational();
+static Node *add();
+static Node *mul();
+static Node *unary();
+static Node *term();
+static Node *ident();
 
 /// Consume token
-int consume(int ty) {
+bool consume(int ty) {
   Token *token = (Token *)tokens->data[pos];
   if (token->ty != ty)
     return 0;
@@ -29,7 +29,7 @@ int consume(int ty) {
   return 1;
 }
 
-static void expect(int ty) {
+void expect(int ty) {
   Token *t = tokens->data[pos];
   if (t->ty == ty) {
     pos++;

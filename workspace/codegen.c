@@ -28,15 +28,15 @@ void gen_lval(Node *node) {
 
 /// Generate assembly by Node
 void gen(Node *node) {
-	switch (node->ty) {
-	case ND_RETURN:
+  switch (node->ty) {
+  case ND_RETURN:
     gen(node->lhs);
     emit("pop rax");
     emit("mov rsp, rbp");
     emit("pop rbp");
     emit("ret");
     return;
-	case ND_IF:
+  case ND_IF:
     gen(node->cond);
     emit("pop rax");
     emit("cmp rax, 0");
@@ -56,16 +56,16 @@ void gen(Node *node) {
     }
     nlabel++;
     return;
-	case ND_NUM:
+  case ND_NUM:
     emit("push %d", node->val);
     return;
-	case ND_IDENT:
+  case ND_IDENT:
     gen_lval(node);
     emit("pop rax");
     emit("mov rax, [rax]");
     emit("push rax");
     return;
-	case '=':
+  case '=':
     gen_lval(node->lhs);
     gen(node->rhs);
 
@@ -74,7 +74,7 @@ void gen(Node *node) {
     emit("mov [rax], rdi");
     emit("push rdi");
     return;
-	}
+  }
 
   gen(node->lhs);
   gen(node->rhs);

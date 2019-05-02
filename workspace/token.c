@@ -34,6 +34,8 @@ int is_alnum(char c) {
          ('0' <= c && c <= '9') || (c == '_');
 }
 
+static bool expect(char *c) { return true; }
+
 Vector *tokenize(char *p) {
   Vector *tokens = new_vector();
 
