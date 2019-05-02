@@ -57,8 +57,7 @@ void program() {
 Node *stmt() {
   Node *node;
   if (consume(TK_IF)) {
-    Node *node = malloc(sizeof(Node));
-    node->ty = ND_IF;
+    node = new_node(ND_IF);
     expect('(');
     node->cond = equality();
     expect(')');
@@ -71,9 +70,18 @@ Node *stmt() {
     return node;
   }
 
+  if (consume(TK_WHILE)) {
+    node = new_node(ND_WHILE);
+    expect('(');
+    node->cond = equality();
+    expect(')');
+
+    node->body = stmt();
+    return node;
+  }
+
   if (consume(TK_RETURN)) {
-    node = malloc(sizeof(Node));
-    node->ty = ND_RETURN;
+    node = new_node(ND_RETURN);
     node->lhs = assign();
   } else {
     node = assign();
@@ -89,7 +97,7 @@ Node *stmt() {
 Node *assign() {
   Node *node = equality();
   while (consume('='))
-    node = new_node('=', node, assign());
+    node = new_binop('=', node, assign());
   return node;
 }
 
@@ -97,9 +105,9 @@ Node *equality() {
   Node *node = relational();
   for (;;) {
     if (consume(TK_EQ))
-      node = new_node(ND_EQ, node, relational());
+      node = new_binop(ND_EQ, node, relational());
     else if (consume(TK_NE))
-      node = new_node(ND_NE, node, relational());
+      node = new_binop(ND_NE, node, relational());
     else
       return node;
   }
@@ -109,13 +117,13 @@ Node *relational() {
   Node *node = add();
   for (;;) {
     if (consume('<'))
-      node = new_node('<', node, add());
+      node = new_binop('<', node, add());
     else if (consume('>'))
-      node = new_node('<', add(), node);
+      node = new_binop('<', add(), node);
     else if (consume(TK_LE))
-      node = new_node(ND_LE, node, add());
+      node = new_binop(ND_LE, node, add());
     else if (consume(TK_GE))
-      node = new_node(ND_LE, add(), node);
+      node = new_binop(ND_LE, add(), node);
     else
       return node;
   }
@@ -126,9 +134,9 @@ Node *add() {
 
   for (;;) {
     if (consume('+'))
-      node = new_node('+', node, mul());
+      node = new_binop('+', node, mul());
     else if (consume('-'))
-      node = new_node('-', node, mul());
+      node = new_binop('-', node, mul());
     else
       return node;
   }
@@ -139,9 +147,9 @@ Node *mul() {
 
   for (;;) {
     if (consume('*'))
-      node = new_node('*', node, unary());
+      node = new_binop('*', node, unary());
     else if (consume('/'))
-      node = new_node('/', node, unary());
+      node = new_binop('/', node, unary());
     else
       return node;
   }
@@ -151,7 +159,7 @@ Node *unary() {
   if (consume('+'))
     return term();
   else if (consume('-'))
-    return new_node('-', new_node_num(0), term());
+    return new_binop('-', new_node_num(0), term());
   else
     return term();
 }
@@ -181,8 +189,7 @@ Node *term() {
     }
 
     // Identity Node is only created here. So I don't create init func.
-    Node *node = malloc(sizeof(Node));
-    node->ty = ND_IDENT;
+    Node *node = new_node(ND_IDENT);
     node->offset = offset;
     return node;
   }

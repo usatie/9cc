@@ -56,6 +56,17 @@ void gen(Node *node) {
     }
     nlabel++;
     return;
+  case ND_WHILE:
+    p(".Lbegin%d:", nlabel);
+    gen(node->cond);
+    emit("pop rax");
+    emit("cmp rax, 0");
+    emit("je .Lend%d", nlabel);
+    gen(node->body);
+    emit("jmp .Lbegin%d", nlabel);
+    p(".Lend%d:", nlabel);
+    nlabel++;
+    return;
   case ND_NUM:
     emit("push %d", node->val);
     return;

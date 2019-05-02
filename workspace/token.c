@@ -1,13 +1,13 @@
 #include "9cc.h"
 
-Token *new_token(int ty, char *input) {
+static Token *new_token(int ty, char *input) {
   Token *token = malloc(sizeof(Token));
   token->ty = ty;
   token->input = input;
   return token;
 }
 
-Token *new_token_num(int val, char *input) {
+static Token *new_token_num(int val, char *input) {
   Token *token = malloc(sizeof(Token));
   token->ty = TK_NUM;
   token->val = val;
@@ -15,7 +15,7 @@ Token *new_token_num(int val, char *input) {
   return token;
 }
 
-Token *new_token_id(char *input) {
+static Token *new_token_id(char *input) {
   Token *token = malloc(sizeof(Token));
   token->ty = TK_IDENT;
   token->input = input;
@@ -29,7 +29,7 @@ Token *new_token_eof(char *input) {
   return token;
 }
 
-int is_alnum(char c) {
+static bool is_alnum(char c) {
   return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') ||
          ('0' <= c && c <= '9') || (c == '_');
 }
@@ -66,6 +66,14 @@ Vector *tokenize(char *p) {
       Token *token = new_token(TK_ELSE, p);
       vec_push(tokens, token);
       p += 4;
+      continue;
+    }
+
+    // while
+    if (strncmp(p, "while", 5) == 0 && !is_alnum(p[5])) {
+      Token *token = new_token(TK_WHILE, p);
+      vec_push(tokens, token);
+      p += 5;
       continue;
     }
 

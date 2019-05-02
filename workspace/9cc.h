@@ -39,6 +39,7 @@ enum {
   TK_RETURN,    // return
   TK_IF,        // if
   TK_ELSE,      // else
+  TK_WHILE,     // while
   TK_EOF,       // End of file token
 };
 
@@ -49,10 +50,6 @@ typedef struct {
   char *input;
 } Token;
 
-Token *new_token(int ty, char *input);
-Token *new_token_num(int val, char *input);
-Token *new_token_id(char *input);
-Token *new_token_eof(char *input);
 Vector *tokenize(char *p);
 
 // Node
@@ -64,6 +61,7 @@ enum {
   ND_LE,        // <=
   ND_RETURN,    // return
   ND_IF,        // if
+  ND_WHILE,     // while
 };
 
 typedef struct Node Node;
@@ -77,12 +75,14 @@ typedef struct Node {
   int offset; // Use if ND_IDENT
 
   // Control statements
-  Node *cond;
-  Node *then;
-  Node *els;
+  Node *cond; // if/for/while
+  Node *then; // if
+  Node *els;  // if else
+  Node *body; // for/while
 } Node;
 
-Node *new_node(int ty, Node *lhs, Node *rhs);
+Node *new_node(int ty);
+Node *new_binop(int ty, Node *lhs, Node *rhs);
 Node *new_node_num(int val);
 void gen(Node *node);
 

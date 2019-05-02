@@ -59,6 +59,7 @@ try 33 "if (1 == 2) return 19; else 33;"
 try 13 "if (1 == 2) return 1; if (1 == 1) return 13;"
 try 29 "if (1 == 3) return 1; if (2 == 3) return 2; if (3 == 3) return 29;"
 try 97 "if (1 == 4) return 1; if (2 == 4) return 2; if (3 == 4) return 29; else return 97;"
-
+try 2 "a=0;a = a + 1;a = a + 1;return a;"
+try 10 "a=0;while (a < 10) a = a + 1;return a;"
 
 echo OK
