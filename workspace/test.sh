@@ -64,5 +64,9 @@ try 10 "a=0;while (a < 10) a = a + 1;return a;"
 try 10 "a=0;while (a < 10) a = a + 1;return a;"
 try 100 "a=0;for (i=0;i<100;i = i +1;) a = a + 2;return i;"
 try 200 "a=0;for (i=0;i<100;i = i +1;) a = a + 2;return a;"
+try 6 "if (1 == 1)  { a = 1; b = 2; c = 3; return a+b+c; }"
+try 10 "if (1 == 2)  { a = 1; b = 2; c = 3; return a+b+c; } else { return 10; }"
+try 55 "a=b=0; while (b < 50) {  a = a + 1; b = b + a; } return b;"
+try 55 "a=b=0;for (i=0;i<10;i = i +1;) { a = a + 1; b = a + b; } return b;"
 
 echo OK

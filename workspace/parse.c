@@ -10,6 +10,7 @@ static Map *offset_map;
 /// Header
 static bool consume(int ty);
 static Node *assign();
+Node *compound_stmt();
 static Node *stmt();
 static void program();
 static Node *equality();
@@ -47,11 +48,24 @@ void program() {
   int i = 0;
   Token *token = (Token *)tokens->data[pos];
   while (token->ty != TK_EOF) {
-    code[i] = stmt();
+    code[i] = compound_stmt();
     i++;
     token = (Token *)tokens->data[pos];
   }
   code[i] = NULL;
+}
+
+Node *compound_stmt() {
+  if (consume('{')) {
+    Node *node = new_node(ND_COMP_STMT);
+    node->stmts = new_vector();
+    while (!consume('}')) {
+      vec_push(node->stmts, stmt());
+    }
+    return node;
+  } else {
+    return stmt();
+  }
 }
 
 Node *stmt() {
@@ -62,10 +76,10 @@ Node *stmt() {
     node->cond = equality();
     expect(')');
 
-    node->then = stmt();
+    node->then = compound_stmt();
 
     if (consume(TK_ELSE)) {
-      node->els = stmt();
+      node->els = compound_stmt();
     }
     return node;
   }
@@ -76,7 +90,7 @@ Node *stmt() {
     node->cond = equality();
     expect(')');
 
-    node->body = stmt();
+    node->body = compound_stmt();
     return node;
   }
 
@@ -91,7 +105,7 @@ Node *stmt() {
     expect(';');
     expect(')');
 
-    node->body = stmt();
+    node->body = compound_stmt();
     return node;
   }
 

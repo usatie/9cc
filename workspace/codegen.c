@@ -80,6 +80,10 @@ void gen(Node *node) {
     p(".Lend%d:", nlabel);
     nlabel++;
     return;
+  case ND_COMP_STMT:
+    for (int i = 0; i < node->stmts->len; i++) {
+      gen(node->stmts->data[i]);
+    }
   case ND_NUM:
     emit("push %d", node->val);
     return;

@@ -64,6 +64,7 @@ enum {
   ND_IF,        // if
   ND_WHILE,     // while
   ND_FOR,       // for
+  ND_COMP_STMT, // compound statement
 };
 
 typedef struct Node Node;
@@ -83,6 +84,9 @@ typedef struct Node {
   Node *init; // for
   Node *inc;  // for
   Node *body; // for/while
+
+  // Compound statement
+  Vector *stmts;
 } Node;
 
 Node *new_node(int ty);
