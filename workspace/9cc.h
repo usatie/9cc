@@ -64,15 +64,22 @@ enum {
   ND_LE,        // <=
   ND_RETURN,     // return
   ND_IF,     // if
-  ND_ELSE,     // else
 };
 
+typedef struct Node Node;
 typedef struct Node {
   int ty;           // Operator or ND_NUM
-  struct Node *lhs; // Left hand
-  struct Node *rhs; // Right hand
+  Node *lhs; // Left hand
+  Node *rhs; // Right hand
   int val;          // Use if ND_NUM
-  int offset;        // Use if ND_IDENT
+  
+	// Variable
+	int offset;        // Use if ND_IDENT
+
+	// Control statements
+	Node *cond;
+	Node *then;
+	Node *els;
 } Node;
 
 Node *new_node(int ty, Node *lhs, Node *rhs);
@@ -86,7 +93,6 @@ Node *parse(char *p);
 void error(char *fmt, ...);
 
 // Test
-int expect(int line, int expected, int actual);
 void runtest();
 
 #endif

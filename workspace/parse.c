@@ -29,6 +29,19 @@ int consume(int ty) {
   return 1;
 }
 
+static void expect(int ty) {
+	Token *t = tokens->data[pos];
+	if (t->ty == ty) {
+		pos++;
+		return;
+	}
+
+	if (isprint(ty)) {
+		error("%c expected", ty);
+	}
+	error("Not printable expected character for type %d", ty);
+}
+
 /// Syntax Rules
 void program() {
   int i = 0;
@@ -44,18 +57,18 @@ void program() {
 Node *stmt() {
   Node *node;
 	if (consume(TK_IF)) {
-		node = malloc(sizeof(Node));
+		Node *node = malloc(sizeof(Node));
 		node->ty = ND_IF;
-		Token *token = (Token *)tokens->data[pos];
-		if (consume('(')) {
-			node->lhs = equality();
-			if (!consume(')'))
-				error("There is no closing parenthesis for if statement: %s", token->input);
-			node->rhs = stmt();
-			return node;
-		} else {
-			error("There is no opening parenthesis for if statement: %s", token->input);
+		expect('(');
+		node->cond = equality();
+		expect(')');
+
+		node->then = stmt();
+
+		if (consume(TK_ELSE)) {
+			node->els = stmt();
 		}
+		return node;
 	}
 
   if (consume(TK_RETURN)) {

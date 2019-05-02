@@ -54,5 +54,11 @@ try 10 "foo=3;bar=7;return foo + bar;"
 try 100 "foo=1;bar=9;hoge=3;return (foo + bar) * (hoge + 7);"
 try 21 "if (1 == 1) return 21;return 64;"
 try 64 "if (1 == 2) return 21;return 64;"
+try 19 "if (1 == 1) return 19; else 33;"
+try 33 "if (1 == 2) return 19; else 33;"
+try 13 "if (1 == 2) return 1; if (1 == 1) return 13;"
+try 29 "if (1 == 3) return 1; if (2 == 3) return 2; if (3 == 3) return 29;"
+try 97 "if (1 == 4) return 1; if (2 == 4) return 2; if (3 == 4) return 29; else return 97;"
+
 
 echo OK

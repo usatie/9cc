@@ -1,5 +1,7 @@
 #include "9cc.h"
 
+int nlabel = 0;
+
 void gen_lval(Node *node) {
   if (node->ty != ND_IDENT)
     error("The left hand of assignment is not an identifier.");
@@ -20,12 +22,24 @@ void gen(Node *node) {
 		return;
 	}
 	if (node->ty == ND_IF) {
-		gen(node->lhs);
+		gen(node->cond);
 		printf("	pop rax\n");
 		printf("	cmp rax, 0\n");
-		printf("	je .LendXXX\n"); // TODO: unique XXX
-		gen(node->rhs);
-		printf(".LendXXX:\n"); // TODO: unique XXX
+		if (node->els) {
+			// ifelse
+			printf("	je .Lelse%d\n", nlabel); // TODO: unique XXX
+			gen(node->then);
+			printf("	jmp .Lend%d\n", nlabel); // TODO: unique XXX
+			printf(".Lelse%d:\n", nlabel); // TODO: unique XXX
+			gen(node->els);
+			printf(".Lend%d:\n", nlabel); // TODO: unique XXX
+		} else {
+			// if
+			printf("	je .Lend%d\n", nlabel); // TODO: unique XXX
+			gen(node->then);
+			printf(".Lend%d:\n", nlabel); // TODO: unique XXX
+		}
+		nlabel++;
 		return;
 	}
   if (node->ty == ND_NUM) {
