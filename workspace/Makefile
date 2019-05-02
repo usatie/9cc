@@ -9,6 +9,10 @@ $(OBJS): 9cc.h # All .o files are dependent on 9cc.h
 
 test: 9cc # test depends on 9cc
 	./9cc -test
+	gcc -c foo.c
+	./9cc "foo();" > tmp.s
+	gcc -o tmp tmp.s foo.o
+	./tmp
 	./test.sh
 
 clean:

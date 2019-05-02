@@ -111,7 +111,7 @@ Node *stmt() {
 
   if (consume(TK_RETURN)) {
     node = new_node(ND_RETURN);
-    node->lhs = assign();
+    node->lhs = equality();
   } else {
     node = assign();
   }
@@ -190,21 +190,23 @@ Node *unary() {
     return term();
 }
 
+// "(" + equality ")"
+// num
+// identity
+// identity + "(" + args + ")"
 Node *term() {
   Token *token = (Token *)tokens->data[pos];
   if (consume('(')) {
     Node *node = equality();
-    if (!consume(')'))
-      error("There is no closing parenthesis: %s", token->input);
+    expect(')');
     return node;
   }
 
-  if (token->ty == TK_NUM) {
-    pos++;
+  if (consume(TK_NUM)) {
     return new_node_num(token->val);
-  } else if (token->ty == TK_IDENT) {
-    pos++;
+  }
 
+  if (consume(TK_IDENT)) {
     // If id is seen for the first time, increment num_ids and save offset for
     // the id.
     int offset = (int)map_get(offset_map, token->name);
@@ -214,10 +216,19 @@ Node *term() {
       map_put(offset_map, token->name, offset);
     }
 
-    // Identity Node is only created here. So I don't create init func.
-    Node *node = new_node(ND_IDENT);
-    node->offset = offset;
-    return node;
+    if (consume('(')) {
+      expect(')');
+      // function call
+      Node *node = new_node(ND_CALL);
+      node->offset = offset;
+      node->name = token->name;
+      return node;
+    } else {
+      // identity
+      Node *node = new_node(ND_IDENT);
+      node->offset = offset;
+      return node;
+    }
   }
 
   error("Not number, identifier nor parenthesis: %s", token->input);

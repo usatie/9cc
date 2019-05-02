@@ -86,6 +86,8 @@ void gen(Node *node) {
       emit("pop rax");
     }
     return;
+  case ND_CALL:
+    emit("call %s", node->name);
   case ND_NUM:
     emit("push %d", node->val);
     return;

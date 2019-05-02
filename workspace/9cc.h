@@ -65,6 +65,7 @@ enum {
   ND_WHILE,     // while
   ND_FOR,       // for
   ND_COMP_STMT, // compound statement
+  ND_CALL,      // function call
 };
 
 typedef struct Node Node;
@@ -87,6 +88,9 @@ typedef struct Node {
 
   // Compound statement
   Vector *stmts;
+
+  // function call
+  char *name;
 } Node;
 
 Node *new_node(int ty);
