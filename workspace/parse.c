@@ -37,7 +37,7 @@ void expect(int ty) {
   }
 
   if (isprint(ty)) {
-    error("%c expected", ty);
+    error("%c expected, %s", ty, t->input);
   }
   error("Not printable expected character for type %d", ty);
 }
@@ -80,6 +80,21 @@ Node *stmt() {
     return node;
   }
 
+  if (consume(TK_FOR)) {
+    node = new_node(ND_FOR);
+    expect('(');
+    node->init = assign();
+    expect(';');
+    node->cond = equality();
+    expect(';');
+    node->inc = assign();
+    expect(';');
+    expect(')');
+
+    node->body = stmt();
+    return node;
+  }
+
   if (consume(TK_RETURN)) {
     node = new_node(ND_RETURN);
     node->lhs = assign();
@@ -87,10 +102,7 @@ Node *stmt() {
     node = assign();
   }
 
-  if (!consume(';')) {
-    Token *token = (Token *)tokens->data[pos];
-    error("';' is expected but got: [%d] %s", token->ty, token->input);
-  }
+  expect(';');
   return node;
 }
 

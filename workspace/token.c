@@ -77,6 +77,14 @@ Vector *tokenize(char *p) {
       continue;
     }
 
+    // while
+    if (strncmp(p, "for", 3) == 0 && !is_alnum(p[3])) {
+      Token *token = new_token(TK_FOR, p);
+      vec_push(tokens, token);
+      p += 3;
+      continue;
+    }
+
     // == or !=
     if (!strncmp(p, "==", 2)) {
       Token *token = new_token(TK_EQ, p);

@@ -40,6 +40,7 @@ enum {
   TK_IF,        // if
   TK_ELSE,      // else
   TK_WHILE,     // while
+  TK_FOR,       // for
   TK_EOF,       // End of file token
 };
 
@@ -62,6 +63,7 @@ enum {
   ND_RETURN,    // return
   ND_IF,        // if
   ND_WHILE,     // while
+  ND_FOR,       // for
 };
 
 typedef struct Node Node;
@@ -78,6 +80,8 @@ typedef struct Node {
   Node *cond; // if/for/while
   Node *then; // if
   Node *els;  // if else
+  Node *init; // for
+  Node *inc;  // for
   Node *body; // for/while
 } Node;
 
