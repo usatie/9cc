@@ -19,14 +19,13 @@ void vec_push(Vector *vec, void *elem);
 
 // Map
 typedef struct {
-	Vector *keys;
-	Vector *vals;
+  Vector *keys;
+  Vector *vals;
 } Map;
 
 Map *new_map();
 void map_put(Map *map, char *key, void *val);
 void *map_get(Map *map, char *key);
-
 
 // Token
 enum {
@@ -36,16 +35,16 @@ enum {
   TK_NE,        // !=
   TK_LE,        // <=
   TK_GE,        // >=
-  TK_RETURN,        // return
+  TK_RETURN,    // return
   TK_IF,        // if
-  TK_ELSE,        // else
+  TK_ELSE,      // else
   TK_EOF,       // End of file token
 };
 
 typedef struct {
-  int ty;  // Token type
-  int val; // The value if ty is TK_NUM
-	char *name; // The name if ty is TK_IDENT
+  int ty;     // Token type
+  int val;    // The value if ty is TK_NUM
+  char *name; // The name if ty is TK_IDENT
   char *input;
 } Token;
 
@@ -62,24 +61,24 @@ enum {
   ND_EQ,        // ==
   ND_NE,        // !=
   ND_LE,        // <=
-  ND_RETURN,     // return
-  ND_IF,     // if
+  ND_RETURN,    // return
+  ND_IF,        // if
 };
 
 typedef struct Node Node;
 typedef struct Node {
-  int ty;           // Operator or ND_NUM
+  int ty;    // Operator or ND_NUM
   Node *lhs; // Left hand
   Node *rhs; // Right hand
-  int val;          // Use if ND_NUM
-  
-	// Variable
-	int offset;        // Use if ND_IDENT
+  int val;   // Use if ND_NUM
 
-	// Control statements
-	Node *cond;
-	Node *then;
-	Node *els;
+  // Variable
+  int offset; // Use if ND_IDENT
+
+  // Control statements
+  Node *cond;
+  Node *then;
+  Node *els;
 } Node;
 
 Node *new_node(int ty, Node *lhs, Node *rhs);

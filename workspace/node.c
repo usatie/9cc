@@ -16,4 +16,3 @@ Node *new_node_num(int val) {
   node->val = val;
   return node;
 }
-

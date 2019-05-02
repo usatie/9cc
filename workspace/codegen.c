@@ -5,7 +5,7 @@ int nlabel = 0;
 void gen_lval(Node *node) {
   if (node->ty != ND_IDENT)
     error("The left hand of assignment is not an identifier.");
-	
+
   printf("	mov rax, rbp\n");
   printf("	sub rax, %d\n", node->offset);
   printf("	push rax\n");
@@ -13,35 +13,35 @@ void gen_lval(Node *node) {
 
 /// Generate assembly by Node
 void gen(Node *node) {
-	if (node->ty == ND_RETURN) {
-		gen(node->lhs);
-		printf("	pop rax\n");
-		printf("	mov rsp, rbp\n");
-		printf("	pop rbp\n");
-		printf("	ret\n");
-		return;
-	}
-	if (node->ty == ND_IF) {
-		gen(node->cond);
-		printf("	pop rax\n");
-		printf("	cmp rax, 0\n");
-		if (node->els) {
-			// ifelse
-			printf("	je .Lelse%d\n", nlabel); // TODO: unique XXX
-			gen(node->then);
-			printf("	jmp .Lend%d\n", nlabel); // TODO: unique XXX
-			printf(".Lelse%d:\n", nlabel); // TODO: unique XXX
-			gen(node->els);
-			printf(".Lend%d:\n", nlabel); // TODO: unique XXX
-		} else {
-			// if
-			printf("	je .Lend%d\n", nlabel); // TODO: unique XXX
-			gen(node->then);
-			printf(".Lend%d:\n", nlabel); // TODO: unique XXX
-		}
-		nlabel++;
-		return;
-	}
+  if (node->ty == ND_RETURN) {
+    gen(node->lhs);
+    printf("	pop rax\n");
+    printf("	mov rsp, rbp\n");
+    printf("	pop rbp\n");
+    printf("	ret\n");
+    return;
+  }
+  if (node->ty == ND_IF) {
+    gen(node->cond);
+    printf("	pop rax\n");
+    printf("	cmp rax, 0\n");
+    if (node->els) {
+      // ifelse
+      printf("	je .Lelse%d\n", nlabel);
+      gen(node->then);
+      printf("	jmp .Lend%d\n", nlabel);
+      printf(".Lelse%d:\n", nlabel);
+      gen(node->els);
+      printf(".Lend%d:\n", nlabel);
+    } else {
+      // if
+      printf("	je .Lend%d\n", nlabel);
+      gen(node->then);
+      printf(".Lend%d:\n", nlabel);
+    }
+    nlabel++;
+    return;
+  }
   if (node->ty == ND_NUM) {
     printf("	push %d\n", node->val);
     return;

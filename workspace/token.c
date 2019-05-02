@@ -30,10 +30,8 @@ Token *new_token_eof(char *input) {
 }
 
 int is_alnum(char c) {
-	return ('a' <= c && c <= 'z') || 
-				('A' <= c && c <= 'Z') || 
-				('0' <= c && c <= '9') || 
-				(c == '_');
+  return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') ||
+         ('0' <= c && c <= '9') || (c == '_');
 }
 
 Vector *tokenize(char *p) {
@@ -45,29 +43,29 @@ Vector *tokenize(char *p) {
       continue;
     }
 
-		// Return
-		if (strncmp(p, "return", 6) == 0 && !is_alnum(p[6])) {
-			Token *token = new_token(TK_RETURN, p);
-			vec_push(tokens, token);
-			p += 6;
-			continue;
-		}
+    // Return
+    if (strncmp(p, "return", 6) == 0 && !is_alnum(p[6])) {
+      Token *token = new_token(TK_RETURN, p);
+      vec_push(tokens, token);
+      p += 6;
+      continue;
+    }
 
-		// if
-		if (strncmp(p, "if", 2) == 0 && !is_alnum(p[2])) {
-			Token *token = new_token(TK_IF, p);
-			vec_push(tokens, token);
-			p += 2;
-			continue;
-		}
+    // if
+    if (strncmp(p, "if", 2) == 0 && !is_alnum(p[2])) {
+      Token *token = new_token(TK_IF, p);
+      vec_push(tokens, token);
+      p += 2;
+      continue;
+    }
 
-		// else
-		if (strncmp(p, "else", 4) == 0 && !is_alnum(p[4])) {
-			Token *token = new_token(TK_ELSE, p);
-			vec_push(tokens, token);
-			p += 4;
-			continue;
-		}
+    // else
+    if (strncmp(p, "else", 4) == 0 && !is_alnum(p[4])) {
+      Token *token = new_token(TK_ELSE, p);
+      vec_push(tokens, token);
+      p += 4;
+      continue;
+    }
 
     // == or !=
     if (!strncmp(p, "==", 2)) {
@@ -96,7 +94,8 @@ Vector *tokenize(char *p) {
     }
 
     if (*p == '+' || *p == '-' || *p == '*' || *p == '/' || *p == '(' ||
-        *p == ')' || *p == '<' || *p == '>' || *p == ';' || *p == '=' || *p == '{' || *p == '}') {
+        *p == ')' || *p == '<' || *p == '>' || *p == ';' || *p == '=' ||
+        *p == '{' || *p == '}') {
       Token *token = new_token(*p, p);
       vec_push(tokens, token);
       p++;
@@ -104,14 +103,14 @@ Vector *tokenize(char *p) {
     }
 
     if ('a' <= *p && *p <= 'z') {
-			int i = 1;
-			while(is_alnum(*(p+i))) {
-				i++;
-			}
-			char* name = malloc(i);
-			strncpy(name, p, i);
+      int i = 1;
+      while (is_alnum(*(p + i))) {
+        i++;
+      }
+      char *name = malloc(i);
+      strncpy(name, p, i);
       Token *token = new_token_id(p);
-			token->name = name;
+      token->name = name;
       vec_push(tokens, token);
       p += i;
       continue;

@@ -9,8 +9,8 @@ static int expect(int line, int expected, int actual) {
 }
 
 void runtest() {
-	test_vector();
-	test_map();
+  test_vector();
+  test_map();
 }
 
 void test_vector() {
@@ -29,15 +29,15 @@ void test_vector() {
 }
 
 void test_map() {
-	Map *map = new_map();
+  Map *map = new_map();
   expect(__LINE__, 0, (long)map_get(map, "foo"));
 
-	map_put(map, "foo", (void *)2);
+  map_put(map, "foo", (void *)2);
   expect(__LINE__, 2, (long)map_get(map, "foo"));
 
-	map_put(map, "bar", (void *)4);
+  map_put(map, "bar", (void *)4);
   expect(__LINE__, 4, (long)map_get(map, "bar"));
 
-	map_put(map, "foo", (void *)6);
+  map_put(map, "foo", (void *)6);
   expect(__LINE__, 6, (long)map_get(map, "foo"));
 }

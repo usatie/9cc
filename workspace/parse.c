@@ -30,16 +30,16 @@ int consume(int ty) {
 }
 
 static void expect(int ty) {
-	Token *t = tokens->data[pos];
-	if (t->ty == ty) {
-		pos++;
-		return;
-	}
+  Token *t = tokens->data[pos];
+  if (t->ty == ty) {
+    pos++;
+    return;
+  }
 
-	if (isprint(ty)) {
-		error("%c expected", ty);
-	}
-	error("Not printable expected character for type %d", ty);
+  if (isprint(ty)) {
+    error("%c expected", ty);
+  }
+  error("Not printable expected character for type %d", ty);
 }
 
 /// Syntax Rules
@@ -56,30 +56,30 @@ void program() {
 
 Node *stmt() {
   Node *node;
-	if (consume(TK_IF)) {
-		Node *node = malloc(sizeof(Node));
-		node->ty = ND_IF;
-		expect('(');
-		node->cond = equality();
-		expect(')');
+  if (consume(TK_IF)) {
+    Node *node = malloc(sizeof(Node));
+    node->ty = ND_IF;
+    expect('(');
+    node->cond = equality();
+    expect(')');
 
-		node->then = stmt();
+    node->then = stmt();
 
-		if (consume(TK_ELSE)) {
-			node->els = stmt();
-		}
-		return node;
-	}
+    if (consume(TK_ELSE)) {
+      node->els = stmt();
+    }
+    return node;
+  }
 
   if (consume(TK_RETURN)) {
-		node = malloc(sizeof(Node));
-		node->ty = ND_RETURN;
-		node->lhs = assign();
-	} else {
-		node = assign();
-	}
-	
-	if (!consume(';')) {
+    node = malloc(sizeof(Node));
+    node->ty = ND_RETURN;
+    node->lhs = assign();
+  } else {
+    node = assign();
+  }
+
+  if (!consume(';')) {
     Token *token = (Token *)tokens->data[pos];
     error("';' is expected but got: [%d] %s", token->ty, token->input);
   }
@@ -170,19 +170,20 @@ Node *term() {
     return new_node_num(token->val);
   } else if (token->ty == TK_IDENT) {
     pos++;
-		
-		// If id is seen for the first time, increment num_ids and save offset for the id.
-		int offset = (int)map_get(offset_map, token->name);
-		if (offset == 0) {
-			num_ids++;
-			offset = num_ids * 8;
-			map_put(offset_map, token->name, offset);
-		}
 
-		// Identity Node is only created here. So I don't create init func.
-		Node *node = malloc(sizeof(Node));
-		node->ty = ND_IDENT;
-		node->offset = offset;
+    // If id is seen for the first time, increment num_ids and save offset for
+    // the id.
+    int offset = (int)map_get(offset_map, token->name);
+    if (offset == 0) {
+      num_ids++;
+      offset = num_ids * 8;
+      map_put(offset_map, token->name, offset);
+    }
+
+    // Identity Node is only created here. So I don't create init func.
+    Node *node = malloc(sizeof(Node));
+    node->ty = ND_IDENT;
+    node->offset = offset;
     return node;
   }
 
@@ -191,8 +192,8 @@ Node *term() {
 
 Node *parse(char *p) {
   pos = 0;
-	num_ids = 0;
-	offset_map = new_map();
+  num_ids = 0;
+  offset_map = new_map();
   tokens = tokenize(p);
   program();
   return code;
