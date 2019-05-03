@@ -87,6 +87,31 @@ void gen(Node *node) {
     }
     return;
   case ND_CALL:
+    // push args to stack
+    for (int i = node->args->len - 1; i > 0; i--) {
+      gen(node->args->data[i]);
+      switch (i) {
+      case 0:
+        emit("pop rdi");
+        break;
+      case 1:
+        emit("pop rsi");
+        break;
+      case 2:
+        emit("pop rdx");
+        break;
+      case 3:
+        emit("pop rcx");
+        break;
+      case 4:
+        emit("pop r8");
+        break;
+      case 5:
+        emit("pop r9");
+        break;
+      }
+    }
+
     emit("call %s", node->name);
     // Returned value is expected by main()
     // If called function is void, it can cause a problem.

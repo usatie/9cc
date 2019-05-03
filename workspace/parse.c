@@ -217,11 +217,14 @@ Node *term() {
     }
 
     if (consume('(')) {
-      expect(')');
       // function call
       Node *node = new_node(ND_CALL);
-      node->offset = offset;
       node->name = token->name;
+      node->args = new_vector();
+      while (!consume(')')) {
+        vec_push(node->args, term());
+        consume(',');
+      }
       return node;
     } else {
       // identity
