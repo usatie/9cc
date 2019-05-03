@@ -29,6 +29,21 @@ void gen_lval(Node *node) {
 /// Generate assembly by Node
 void gen(Node *node) {
   switch (node->ty) {
+  case ND_DECL_FUNC:
+    p(".global %s", node->name);
+    p("%s:", node->name);
+    // Prologue
+    // Layout memory for 10 variables
+    emit("push rbp");
+    emit("mov rbp, rsp");
+    emit("sub rsp, 80");
+    gen(node->body);
+
+    // Epilogue
+    // Free memory for variables
+    emit("mov rsp, rbp");
+    emit("pop rbp");
+    return;
   case ND_RETURN:
     gen(node->lhs);
     emit("pop rax");

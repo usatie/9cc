@@ -11,7 +11,8 @@ static Map *offset_map;
 /// Header
 static bool consume(int ty);
 static Node *assign();
-Node *compound_stmt();
+static Node *toplevel();
+static Node *compound_stmt();
 static Node *stmt();
 static void program();
 static Node *equality();
@@ -20,7 +21,7 @@ static Node *add();
 static Node *mul();
 static Node *unary();
 static Node *term();
-static Node *ident();
+static char *ident();
 
 /// Consume token
 bool consume(int ty) {
@@ -45,44 +46,65 @@ void expect(int ty) {
 }
 
 /// Syntax Rules
-// program: stmt + program
+// program: func + program
 // program: ε
 void program() {
   int i = 0;
   while (!consume(TK_EOF)) {
-    code[i] = compound_stmt();
+    code[i] = toplevel();
     i++;
   }
   code[i] = NULL;
 }
 
-// compound_stmt: "{" + stmts + "}"
-// compound_stmt: stmt
-Node *compound_stmt() {
-  if (consume('{')) {
-    Node *node = new_node(ND_COMP_STMT);
-    node->stmts = new_vector();
-    while (!consume('}')) {
-      vec_push(node->stmts, stmt());
-    }
-    return node;
-  } else {
-    return stmt();
-  }
+// toplevel: ident + "(" + args + ")" + compound_stmt
+Node *toplevel() {
+  // Function
+  char *name = ident();
+  expect('(');
+  Vector *params = new_vector();
+  expect(')');
+
+  Node *node = new_node(ND_DECL_FUNC);
+  node->params = params;
+  node->name = name;
+  expect('{');
+  node->body = compound_stmt();
+  return node;
 }
 
+Node *compound_stmt() {
+  Node *node = new_node(ND_COMP_STMT);
+  node->stmts = new_vector();
+  while (!consume('}')) {
+    vec_push(node->stmts, stmt());
+  }
+  return node;
+}
+
+// stmt: "{" + stmts + "}"
+// stmt: "if" + "(" + equality + ")" + stmt
+// stmt: "if" + "(" + equality + ")" + stmt + "else" + stmt
+// stmt: "while" + "(" + equality + ")" + stmt
+// stmt: "for" + "(" + assign + ";" + equality + ";" + assign + ";" + ")" + stmt
+// stmt: "return" + equality + ";"
+// stmt: assign + ";"
 Node *stmt() {
   Node *node;
+  if (consume('{')) {
+    return compound_stmt();
+  }
+
   if (consume(TK_IF)) {
     node = new_node(ND_IF);
     expect('(');
     node->cond = equality();
     expect(')');
 
-    node->then = compound_stmt();
+    node->then = stmt();
 
     if (consume(TK_ELSE)) {
-      node->els = compound_stmt();
+      node->els = stmt();
     }
     return node;
   }
@@ -93,7 +115,7 @@ Node *stmt() {
     node->cond = equality();
     expect(')');
 
-    node->body = compound_stmt();
+    node->body = stmt();
     return node;
   }
 
@@ -108,7 +130,7 @@ Node *stmt() {
     expect(';');
     expect(')');
 
-    node->body = compound_stmt();
+    node->body = stmt();
     return node;
   }
 
@@ -209,35 +231,39 @@ Node *term() {
     return new_node_num(token->val);
   }
 
-  if (consume(TK_IDENT)) {
+  char *name = ident();
+  if (consume('(')) {
+    // function call
+    Node *node = new_node(ND_CALL);
+    node->name = name;
+    node->args = new_vector();
+    while (!consume(')')) {
+      vec_push(node->args, equality());
+      consume(',');
+    }
+    return node;
+  } else {
+    // identity
     // If id is seen for the first time, increment num_ids and save offset for
     // the id.
-    int offset = (int)map_get(offset_map, token->name);
+    int offset = (int)map_get(offset_map, name);
     if (offset == 0) {
       num_ids++;
       offset = num_ids * 8;
       map_put(offset_map, token->name, offset);
     }
 
-    if (consume('(')) {
-      // function call
-      Node *node = new_node(ND_CALL);
-      node->name = token->name;
-      node->args = new_vector();
-      while (!consume(')')) {
-        vec_push(node->args, equality());
-        consume(',');
-      }
-      return node;
-    } else {
-      // identity
-      Node *node = new_node(ND_IDENT);
-      node->offset = offset;
-      return node;
-    }
+    Node *node = new_node(ND_IDENT);
+    node->offset = offset;
+    return node;
   }
+}
 
-  error("Not number, identifier nor parenthesis: %s", token->input);
+char *ident() {
+  Token *t = (Token *)tokens->data[pos++];
+  if (t->ty != TK_IDENT)
+    error("expected Identifier: %s", t->input);
+  return t->name;
 }
 
 Node *parse(char *p) {

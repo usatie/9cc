@@ -66,6 +66,7 @@ enum {
   ND_FOR,       // for
   ND_COMP_STMT, // compound statement
   ND_CALL,      // function call
+  ND_DECL_FUNC, // function declaration
 };
 
 typedef struct Node Node;
@@ -92,6 +93,9 @@ typedef struct Node {
   // function call
   char *name;
   Vector *args;
+
+  // Function Declaration
+  Vector *params;
 } Node;
 
 Node *new_node(int ty);

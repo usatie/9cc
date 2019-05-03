@@ -18,28 +18,12 @@ int main(int argc, char **argv) {
 
   // Print assembly's first half
   printf(".intel_syntax noprefix\n");
-  printf(".global main\n");
-  printf("main:\n");
-
-  // Prologue
-  // Layout memory for 10 variables
-  printf("	push rbp\n");
-  printf("	mov rbp, rsp\n");
-  printf("	sub rsp, 80\n");
 
   // Generate code with going down abstract tree
   while (*node) {
     gen(*node);
     node++;
-
-    // One value should be on the top stack.
-    printf("	pop rax\n");
   }
-
-  // Epilogue
-  // Free memory for variables
-  printf("	mov rsp, rbp\n");
-  printf("	pop rbp\n");
 
   // The result should be at the top of stack
   // Load it to RAX as a return value.
