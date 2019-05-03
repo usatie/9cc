@@ -25,8 +25,5 @@ int main(int argc, char **argv) {
     node++;
   }
 
-  // The result should be at the top of stack
-  // Load it to RAX as a return value.
-  printf("	ret\n");
   return 0;
 }

@@ -30,6 +30,7 @@ void gen_lval(Node *node) {
 void gen(Node *node) {
   switch (node->ty) {
   case ND_DECL_FUNC:
+    p(".text");
     p(".global %s", node->name);
     p("%s:", node->name);
     // Prologue
@@ -39,10 +40,14 @@ void gen(Node *node) {
     emit("sub rsp, 80");
     gen(node->body);
 
+    // TODO: if function is void, epilogue is necessary.
     // Epilogue
     // Free memory for variables
-    emit("mov rsp, rbp");
-    emit("pop rbp");
+    // emit("mov rsp, rbp");
+    // emit("pop rbp");
+    // // The result should be at the top of stack
+    // // Load it to RAX as a return value.
+    // emit("ret");
     return;
   case ND_RETURN:
     gen(node->lhs);
@@ -98,7 +103,7 @@ void gen(Node *node) {
   case ND_COMP_STMT:
     for (int i = 0; i < node->stmts->len; i++) {
       gen(node->stmts->data[i]);
-      emit("pop rax");
+      // emit("pop rax");
     }
     return;
   case ND_CALL:
@@ -131,6 +136,7 @@ void gen(Node *node) {
     // return value will be set on rax
     emit("mov rax, 0");
     emit("call %s", node->name);
+    emit("push rax;");
     // Returned value is expected by main()
     // If called function is void, it can cause a problem.
     return;
