@@ -1,6 +1,7 @@
 #include "9cc.h"
 
 /// Variables
+static Vector *functions;
 static Node *code[5];
 static Vector *tokens;
 static int pos = 0;
@@ -44,17 +45,19 @@ void expect(int ty) {
 }
 
 /// Syntax Rules
+// program: stmt + program
+// program: ε
 void program() {
   int i = 0;
-  Token *token = (Token *)tokens->data[pos];
-  while (token->ty != TK_EOF) {
+  while (!consume(TK_EOF)) {
     code[i] = compound_stmt();
     i++;
-    token = (Token *)tokens->data[pos];
   }
   code[i] = NULL;
 }
 
+// compound_stmt: "{" + stmts + "}"
+// compound_stmt: stmt
 Node *compound_stmt() {
   if (consume('{')) {
     Node *node = new_node(ND_COMP_STMT);
