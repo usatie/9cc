@@ -88,7 +88,7 @@ void gen(Node *node) {
     return;
   case ND_CALL:
     // push args to stack
-    for (int i = node->args->len - 1; i > 0; i--) {
+    for (int i = node->args->len - 1; i >= 0; i--) {
       gen(node->args->data[i]);
       switch (i) {
       case 0:
@@ -112,6 +112,9 @@ void gen(Node *node) {
       }
     }
 
+    // TODO: Adjust RSP to be the multiple of 16
+    // return value will be set on rax
+    emit("mov rax, 0");
     emit("call %s", node->name);
     // Returned value is expected by main()
     // If called function is void, it can cause a problem.

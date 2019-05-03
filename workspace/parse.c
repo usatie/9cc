@@ -222,7 +222,7 @@ Node *term() {
       node->name = token->name;
       node->args = new_vector();
       while (!consume(')')) {
-        vec_push(node->args, term());
+        vec_push(node->args, equality());
         consume(',');
       }
       return node;

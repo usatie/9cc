@@ -1,6 +1,6 @@
 #!/bin/bash
 gcc -c foo.c
-./9cc "foo(1, 2, 3, 11, 22, 33, 44, 55, 66);" > tmp.s
+./9cc "a=1;b=2;c=3;foo(a, a + b, a + b + c, 11, 22, 33, 44, 55, 66);" > tmp.s
 gcc -o tmp tmp.s foo.o
 ./tmp
 try() {
