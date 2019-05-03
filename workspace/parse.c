@@ -57,13 +57,28 @@ void program() {
   code[i] = NULL;
 }
 
-// toplevel: ident + "(" + args + ")" + compound_stmt
+// param_declaration:
+Node *param_declaration() {
+  Node *param = new_node(ND_DECL_PARAM);
+  char *name = ident();
+  param->name = name;
+  num_ids++;
+  int offset = num_ids * 8;
+  map_put(offset_map, name, offset);
+  param->offset = offset;
+  return param;
+}
+
+// toplevel: ident + "(" + params + ")" + compound_stmt
 Node *toplevel() {
   // Function
   char *name = ident();
   expect('(');
   Vector *params = new_vector();
-  expect(')');
+  while (!consume(')')) {
+    vec_push(params, param_declaration());
+    consume(',');
+  }
 
   Node *node = new_node(ND_DECL_FUNC);
   node->params = params;

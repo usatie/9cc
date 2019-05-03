@@ -38,6 +38,33 @@ void gen(Node *node) {
     emit("push rbp");
     emit("mov rbp, rsp");
     emit("sub rsp, 80");
+    // push args to stack
+    for (int i = 0; i < node->params->len; i++) {
+      Node *param = (Node *)node->params->data[i];
+      emit("mov rax, rbp");
+      emit("sub rax, %d", param->offset);
+      switch (i) {
+      case 0:
+        emit("mov [rax], rdi");
+        break;
+      case 1:
+        emit("mov [rax], rsi");
+        break;
+      case 2:
+        emit("mov [rax], rdx");
+        break;
+      case 3:
+        emit("mov [rax], rcx");
+        break;
+      case 4:
+        emit("mov [rax], r8");
+        break;
+      case 5:
+        emit("mov [rax], r9");
+        break;
+      }
+    }
+
     gen(node->body);
 
     // TODO: if function is void, epilogue is necessary.
@@ -110,6 +137,8 @@ void gen(Node *node) {
     // push args to stack
     for (int i = node->args->len - 1; i >= 0; i--) {
       gen(node->args->data[i]);
+    }
+    for (int i = 0; i < node->args->len; i++) {
       switch (i) {
       case 0:
         emit("pop rdi");

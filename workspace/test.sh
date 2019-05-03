@@ -73,5 +73,9 @@ try 10 "main() { if (1 == 2)  { a = 1; b = 2; c = 3; return a+b+c; } else { retu
 try 55 "main() { a=b=0; while (b < 50) {  a = a + 1; b = b + a; } return b; }"
 try 55 "main() { a=b=0;for (i=0;i<10;i = i +1;) { a = a + 1; b = a + b; } return b; }"
 try 10 "somefunc() { return 10; } main() { return somefunc(); }"
+try 33 "add(x, y) { return x+y; } main() { return add(11, 22); }"
+try 110 "add(x, y) { return x+y; } main() { return add(11, 22) + add(33, 44); }"
+try 15 "add(x, y) { return x+y; } main() { return add(add(1, 2), add(5, 7)); }"
+try 144 "fib(n) { if (n==0) return 0; if (n == 1) return 1; return fib(n-1) + fib(n-2); } main() { return fib(12); }"
 
 echo OK

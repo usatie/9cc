@@ -67,6 +67,7 @@ enum {
   ND_COMP_STMT, // compound statement
   ND_CALL,      // function call
   ND_DECL_FUNC, // function declaration
+  ND_DECL_PARAM, // parameter declaration
 };
 
 typedef struct Node Node;
